@@ -43,5 +43,8 @@ jobs:
       - name: Install dependencies
         run: yarn --frozen-lockfile
 
-      - name: Add binaries to release
+      - name: Build
+        run: yarn build
+
+      - name: Create binaries and attach them to release
         run: yarn release
