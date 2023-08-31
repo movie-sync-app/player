@@ -46,4 +46,4 @@ jobs:
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn build && yarn electron-builder -p always
+        run: yarn build:linux --publish always
