@@ -1,0 +1,44 @@
+name: Draft Release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  update-release-draft:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup git
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "<>"
+
+      - name: Checkout main
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+
+      - name: Execute Release Drafter
+        uses: release-drafter/release-drafter@v5
+        with:
+          disable-autolabeler: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Parse version from tag
+        id: version
+        uses: release-kit/semver@v2
+
+      - name: Set version
+        run: npm version ${{ steps.version.outputs.full }}
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Add binaries to release
+        run: yarn release

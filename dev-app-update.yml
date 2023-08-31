@@ -1,0 +1,4 @@
+provider: github
+owner: movie-sync-app
+repo: player
+updaterCacheDirName: player-updater
