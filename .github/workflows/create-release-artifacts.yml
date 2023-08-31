@@ -1,0 +1,34 @@
+name: Create Release Artifacts
+
+on:
+  release:
+    types:
+      - created
+      - edited
+
+jobs:
+  update-release-draft:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+
+      - name: Parse version from tag
+        id: version
+        uses: release-kit/semver@v2
+
+      - name: Set version
+        run: npm version ${{ steps.version.outputs.full }}
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Add binaries to release
+        run: yarn release
