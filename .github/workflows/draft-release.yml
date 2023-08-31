@@ -8,9 +8,45 @@ jobs:
   update-release-draft:
     runs-on: ubuntu-latest
     steps:
+      - name: Setup git
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "<>"
+
+      - name: Checkout main
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+
       - name: Execute Release Drafter
         uses: release-drafter/release-drafter@v5
         with:
           disable-autolabeler: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get draft release
+        id: release
+        uses: agners/get-draft-release@v0.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Parse version from release tag_name
+        id: version
+        uses: release-kit/semver@v2
+        with:
+          string: ${{ steps.release.outputs.tag_name }}
+
+      - name: Set version
+        run: npm version ${{ steps.version.outputs.full }}
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Add binaries to release
+        run: yarn release
