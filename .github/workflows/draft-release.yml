@@ -31,11 +31,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get draft release
-        id: release
-        uses: kaliber5/action-get-release@v1
+        uses: cardinalby/git-get-release-action@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          draft: true
+         draft: true
 
       - name: Parse version from release tag_name
         id: version
