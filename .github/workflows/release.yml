@@ -35,4 +35,4 @@ jobs:
       - name: Create binaries and attach them to release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn release
+        run: yarn electron-builder -p always

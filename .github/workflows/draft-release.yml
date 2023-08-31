@@ -18,12 +18,6 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org/
 
-      - name: Install dependencies
-        run: yarn --frozen-lockfile
-
-      - name: Build
-        run: yarn build
-
       - name: Execute Release Drafter
         id: release
         uses: release-drafter/release-drafter@v5
@@ -31,3 +25,20 @@ jobs:
           disable-autolabeler: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Parse version from release tag_name
+        id: version
+        uses: release-kit/semver@v2
+        with:
+          string: ${{ steps.release.outputs.tag_name }}
+
+      - name: Set version
+        run: npm version ${{ steps.version.outputs.full }}
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: yarn build && yarn electron-builder -p always
