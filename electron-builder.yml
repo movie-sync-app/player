@@ -31,10 +31,9 @@ dmg:
 linux:
   target:
     - AppImage
-    - snap
     - deb
   maintainer: risen228
-  category: Utility
+  category: AudioVideo
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
