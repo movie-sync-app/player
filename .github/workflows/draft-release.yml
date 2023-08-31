@@ -8,6 +8,11 @@ jobs:
   update-release-draft:
     runs-on: ubuntu-latest
     steps:
+      - name: Setup git
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "<>"
+
       - name: Checkout main
         uses: actions/checkout@v3
         with:
