@@ -32,9 +32,10 @@ jobs:
 
       - name: Get draft release
         id: release
-        uses: agners/get-draft-release@v0.1.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: kaliber5/action-get-release@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: true
 
       - name: Parse version from release tag_name
         id: version
